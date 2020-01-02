@@ -1,5 +1,5 @@
 import 'dart:convert';
-
+import 'package:startup_namer/utils/gitApi.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:startup_namer/models/index.dart';
@@ -27,21 +27,22 @@ class Global {
   // 初始化全局信息
   static Future init() async {
     perfs = await SharedPreferences.getInstance();
-    Profile profile = perfs.getString('profile');
+    Profile p;
+    var profile = perfs.getString('profile');
     if (profile != null) {
       try {
-        profile = Profile.fromJson(jsonDecode(profile));
+        p = Profile.fromJson(jsonDecode(profile));
       } catch (e) {
         print(e);
       }
     }
 
-    profile.cache = profile.cache ?? CacheConfig()
+    p.cache = p.cache ?? CacheConfig()
       ..enable = true
       ..maxAge = 3600
       ..maxCount = 100;
 
-    // Git.init();
+    Git.init();
   }
 
   static saveProfile() =>

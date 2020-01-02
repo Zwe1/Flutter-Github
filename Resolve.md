@@ -11,3 +11,9 @@
         jcenter()
     }
 ```
+
+## packages
+
+1. 数据持久化
+
+shared_preferences
