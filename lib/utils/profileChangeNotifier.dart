@@ -18,8 +18,8 @@ class UserModal extends ProfileChangeNotifier {
   User get user => profile.user;
 
   set user(User user) {
-    if (user?.login != profile.user.login) {
-      profile.lastLogin = profile.user?.login;
+    if (user?.login != profile?.user?.login) {
+      profile.lastLogin = profile?.user?.login;
       profile.user = user;
       notifyListeners();
     }
@@ -30,12 +30,11 @@ class UserModal extends ProfileChangeNotifier {
 
 // 切换主题
 class ThemeModal extends ProfileChangeNotifier {
-  ColorSwatch get theme => Global.themes
-      .firstWhere((e) => e.value == profile.theme, orElse: () => Colors.blue);
+  ColorSwatch get theme => profile.theme;
 
   set theme(ColorSwatch color) {
     if (color != theme) {
-      profile.theme = color[500].value;
+      profile.theme = color;
       notifyListeners();
     }
   }
@@ -56,5 +55,15 @@ class LocaleModal extends ProfileChangeNotifier {
       profile.locale = locale;
       notifyListeners();
     }
+  }
+}
+
+// 仓库数据
+class RepoModal extends ProfileChangeNotifier {
+  List<Repo> get repoList => Global.repoList;
+
+  set repoList(List<Repo> list) {
+    Global.repoList = list;
+    notifyListeners();
   }
 }

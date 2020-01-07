@@ -23,7 +23,7 @@ Profile _$ProfileFromJson(Map<String, dynamic> json) {
 Map<String, dynamic> _$ProfileToJson(Profile instance) => <String, dynamic>{
       'user': instance.user,
       'token': instance.token,
-      'theme': instance.theme,
+      'theme': instance.theme.toString(),
       'cache': instance.cache,
       'lastLogin': instance.lastLogin,
       'locale': instance.locale

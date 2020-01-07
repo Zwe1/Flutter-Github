@@ -3,8 +3,9 @@ import 'package:startup_namer/utils/gitApi.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:startup_namer/models/index.dart';
+import 'package:startup_namer/utils/httpRequest.dart';
 
-const themes = <MaterialColor>[
+const _themes = <MaterialColor>[
   Colors.blue,
   Colors.cyan,
   Colors.teal,
@@ -14,30 +15,35 @@ const themes = <MaterialColor>[
 
 class Global {
   // 持久化数据
-  static SharedPreferences perfs;
+  static SharedPreferences _perfs;
   // 用户配置
-  static Profile profile = new Profile();
+  static Profile profile;
+  // 仓库数据
+  static List<Repo> repoList;
   // 缓存
-  static CacheConfig netCache = new CacheConfig();
+  static NetCache netCache = new NetCache();
   // 主题列表
-  static List<MaterialColor> get themes => themes;
+  static List<MaterialColor> get themes => _themes;
   // 是否生产版本
   static bool isRelease = bool.fromEnvironment('dart.vm.product');
 
   // 初始化全局信息
   static Future init() async {
-    perfs = await SharedPreferences.getInstance();
-    Profile p;
-    var profile = perfs.getString('profile');
+    _perfs = await SharedPreferences.getInstance();
+
+    String p = _perfs.getString('profile');
+
     if (profile != null) {
       try {
-        p = Profile.fromJson(jsonDecode(profile));
+        profile = Profile.fromJson(jsonDecode(p));
       } catch (e) {
         print(e);
       }
+    } else {
+      profile = Profile();
     }
 
-    p.cache = p.cache ?? CacheConfig()
+    profile.cache = profile.cache ?? CacheConfig()
       ..enable = true
       ..maxAge = 3600
       ..maxCount = 100;
@@ -46,5 +52,5 @@ class Global {
   }
 
   static saveProfile() =>
-      perfs.setString('profile', jsonEncode(profile.toJson()));
+      _perfs.setString('profile', jsonEncode(profile.toJson()));
 }

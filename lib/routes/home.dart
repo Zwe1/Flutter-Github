@@ -1,51 +1,62 @@
 import 'package:flutter/material.dart';
+import 'package:infinite_listview/infinite_listview.dart';
 import 'package:provider/provider.dart';
+import 'package:startup_namer/i10n/localizations.dart';
 import 'package:startup_namer/utils/gmAvatar.dart';
 import 'package:startup_namer/utils/profileChangeNotifier.dart';
+import 'package:startup_namer/models/index.dart';
+import 'package:startup_namer/utils/gitApi.dart';
+import 'package:startup_namer/widgets/repoItem.dart';
 
 class HomeRoute extends StatefulWidget {
   @override
-  HomeRouteState createState() => HomeRouteState();
+  _HomeRouteState createState() {
+    print('createState----');
+    return _HomeRouteState();
+  }
 }
 
-class HomeRouteState extends State<HomeRoute> {
+class _HomeRouteState extends State<HomeRoute> {
+  List<Repo> repoList;
+
+  @override
+  void initState() {
+    super.initState();
+    print('initState----');
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('home'),
+        title: Text(NativeLocalizations.of(context).home),
       ),
-      body: buildBody(context),
-      // drawer: myDraw(),
+      body: _buildBody(context),
+      drawer: MyDrawer(),
     );
   }
 
-  buildBody(context) async {
+  Widget _buildBody(context) {
     UserModal userModal = Provider.of<UserModal>(context);
+    RepoModal repo = Provider.of<RepoModal>(context);
 
     if (!userModal.isLogin) {
       // 用户未登录
       return Center(
         child: RaisedButton(
-          child: Text('登录'),
+          child: Text(NativeLocalizations.of(context).login),
           onPressed: () => Navigator.of(context).pushNamed('login'),
         ),
       );
     } else {
-      // var data = await Git(context).getRepos(refresh: true, params: {
-      //   'page': 1,
-      //   'page_size': 20,
-      // });
-
-      // return InfiniteListView.separated(
-      //     itemBuilder: (BuildContext context, int index) {
-      //   return RepoItem(index);
-      // });
-      return Text('content');
+      return new ListView.builder(
+        itemCount: repo?.repoList?.length ?? 0,
+        itemBuilder: (BuildContext context, int i) {
+          return RepoIetm(repo.repoList[i]);
+        },
+      );
     }
   }
-
-  // Widget myDraw() {}
 }
 
 class MyDrawer extends StatelessWidget {
@@ -86,12 +97,13 @@ class MyDrawer extends StatelessWidget {
                   child: ClipOval(
                     child: value.isLogin
                         ? gmAvatar(value.user.avatar_url, width: 80)
-                        : Image.asset('imgs/avatar-default.png', width: 80),
+                        : Image.asset('lib/assets/images/avatar-default.png',
+                            width: 80),
                   ),
                 ),
                 Text(value.isLogin
                     ? value.user.login
-                    : Localizations.of(context, null)),
+                    : NativeLocalizations.of(context).login),
                 // style: TextStyle(
                 //     fontWeight: FontWeight.bold, color: Colors.white)
               ],
@@ -100,6 +112,7 @@ class MyDrawer extends StatelessWidget {
           onTap: () {
             // 没登录，点击时跳转登录
             if (!value.isLogin) Navigator.of(context).pushNamed('login');
+            // Navigator.of(context).pop();
           },
         );
       },
@@ -115,31 +128,33 @@ class MyDrawer extends StatelessWidget {
           children: <Widget>[
             ListTile(
               leading: const Icon(Icons.color_lens),
-              title: Text('themes'),
+              title: Text(NativeLocalizations.of(context).theme),
               onTap: () => Navigator.pushNamed(context, 'themes'),
             ),
             ListTile(
               leading: const Icon(Icons.language),
-              title: Text('language'),
+              title: Text(NativeLocalizations.of(context).language),
               onTap: () => Navigator.pushNamed(context, 'language'),
             ),
             if (userModal.isLogin)
               ListTile(
                 leading: const Icon(Icons.power_settings_new),
-                title: Text('logout'),
+                title: Text(NativeLocalizations.of(context).lougout),
                 onTap: () {
                   showDialog(
                       context: context,
                       builder: (ctx) {
                         return AlertDialog(
-                          content: Text('退出'),
+                          content:
+                              Text(NativeLocalizations.of(context).lougout),
                           actions: <Widget>[
                             FlatButton(
-                              child: Text('取消'),
+                              child:
+                                  Text(NativeLocalizations.of(context).cancel),
                               onPressed: () => Navigator.pop(context),
                             ),
                             FlatButton(
-                              child: Text('确定 '),
+                              child: Text(NativeLocalizations.of(context).ok),
                               onPressed: () {
                                 //该赋值语句会触发MaterialApp rebuild
                                 userModal.user = null;

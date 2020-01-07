@@ -9,8 +9,8 @@ Widget gmAvatar(
   BoxFit fit,
   BorderRadius borderRadius,
 }) {
-  var placeholder =
-      Image.asset('imgs/avatar-default.png', width: width, height: height);
+  var placeholder = Image.asset('lib/assets/images/avatar-default.png',
+      width: width, height: height);
 
   return ClipRRect(
     borderRadius: borderRadius ?? BorderRadius.circular(2),

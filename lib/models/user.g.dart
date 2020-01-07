@@ -24,6 +24,7 @@ User _$UserFromJson(Map<String, dynamic> json) {
     ..created_at = json['created_at'] as String
     ..updated_at = json['updated_at'] as String
     ..total_private_repos = json['total_private_repos'] as num
+    ..repos_url = json['repos_url'] as String
     ..owned_private_repos = json['owned_private_repos'] as num;
 }
 

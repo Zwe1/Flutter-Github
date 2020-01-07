@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:startup_namer/i10n/index.dart';
 import 'package:startup_namer/utils/profileChangeNotifier.dart';
 
 class LanguageRoute extends StatelessWidget {
@@ -25,11 +26,12 @@ class LanguageRoute extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('语言'),
-        actions: <Widget>[
+        title: Text(NativeLocalizations.of(context).language),
+      ),
+      body: ListView(
+        children: <Widget>[
           _buildLanguageItem("中文简体", "zh_CN"),
           _buildLanguageItem("English", "en_US"),
-          _buildLanguageItem('auto', null),
         ],
       ),
     );

@@ -41,9 +41,36 @@ class _RepoItemState extends State<RepoIetm> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
-                    Text(widget.repo.fork
-                        ? widget.repo.full_name
-                        : widget.repo.name),
+                    Text(
+                      widget.repo.fork
+                          ? widget.repo.full_name
+                          : widget.repo.name,
+                      style: TextStyle(
+                          fontSize: 15,
+                          fontWeight: FontWeight.bold,
+                          fontStyle: widget.repo.fork
+                              ? FontStyle.italic
+                              : FontStyle.normal),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(top: 8, bottom: 12),
+                      child: widget.repo.description == null
+                          ? Text(
+                              '无描述',
+                              style: TextStyle(
+                                  fontStyle: FontStyle.italic,
+                                  color: Colors.grey[700]),
+                            )
+                          : Text(
+                              widget.repo.description,
+                              maxLines: 3,
+                              style: TextStyle(
+                                height: 1.15,
+                                color: Colors.blueGrey[700],
+                                fontSize: 13,
+                              ),
+                            ),
+                    )
                   ],
                 ),
               ),
@@ -75,6 +102,18 @@ class _RepoItemState extends State<RepoIetm> {
                 Icon(Icons.star_half),
                 Text(widget.repo.forks_count.toString().padRight(paddingWidth))
               ];
+
+              if (widget.repo.fork) {
+                children.add(Text('Forked'.padRight(paddingWidth)));
+              }
+
+              if (widget.repo.private == true) {
+                children.addAll(<Widget>[
+                  Icon(Icons.lock),
+                  Text(" private".padRight(paddingWidth))
+                ]);
+              }
+
               return Row(
                 children: children,
               );
